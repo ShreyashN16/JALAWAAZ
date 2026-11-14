@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>API reference · Jal Awaaz</title>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/app.css">
+<style>
+  .doc { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 28px; align-items: start; }
+  .toc { position: sticky; top: 80px; font-size: var(--s-sm); }
+  .toc a { display: block; padding: 5px 0; color: var(--ink-2); text-decoration: none; }
+  .toc a:hover { color: var(--teal-ink); }
+  .ep { padding: 14px 0; border-top: 1px solid var(--line-2); }
+  .ep-line { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .m { font: 700 11.5px var(--display); padding: 3px 7px; border-radius: var(--r-xs); color: #fff; min-width: 46px; text-align: center; }
+  .m.GET { background: var(--teal); } .m.POST { background: var(--ink); }
+  .path { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 14px; font-weight: 600; }
+  .auth { font-size: 11px; padding: 2px 7px; border-radius: 999px; border: 1px solid var(--line); color: var(--ink-2); }
+  .auth.public { border-style: dashed; color: var(--muted); }
+  .ep p { margin: 6px 0 0; color: var(--ink-2); }
+  .io { display: grid; grid-template-columns: 70px 1fr; gap: 4px 10px; margin-top: 8px; font-size: var(--s-sm); }
+  .io dt { color: var(--muted); } .io dd { margin: 0; font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 12.5px; }
+  .tag-h { margin: 28px 0 4px; font-size: var(--s-xl); }
+  .intro { max-width: 70ch; }
+  .intro code, .ep code { font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 12.5px; background: var(--surface); border: 1px solid var(--line-2); padding: 1px 5px; border-radius: 4px; }
+  @media (max-width: 860px) { .doc { grid-template-columns: 1fr; } .toc { position: static; } }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="page-head"><div><h1>API reference</h1><div class="sub" id="ver"></div></div><span class="spacer"></span><a class="btn btn-quiet btn-sm" href="/api/openapi.json">OpenAPI JSON</a></div>
+  <div class="doc">
+    <nav class="toc" id="toc" aria-label="Sections"></nav>
+    <div>
+      <div class="intro">
+        <p>All responses are JSON unless noted. Errors always have the shape <code>{"error": {"code", "message", "request_id"}}</code>, and every response carries an <code>X-Request-ID</code> header that also appears in the server log.</p>
+        <p>Staff endpoints need the session cookie from <code>POST /api/login</code>. Calls that change data also need the <code>X-CSRF-Token</code> header returned by login or <code>GET /api/me</code>. Public phone endpoints are rate limited per IP address.</p>
+        <p>The longer guide, with examples, is <code>docs/API.md</code> in the repository.</p>
+      </div>
+      <div id="eps"></div>
+    </div>
+  </div>
+</main>
+<script src="/assets/app.js"></script>
+<script>
+(async function () {
+  const { $, h, api } = JA;
+  const me = await JA.me().catch(() => ({}));
+  JA.topbar("/docs", me.role);
+  const spec = await api("/api/openapi.json");
+  $("#ver").textContent = `${spec.info.title} ${spec.info.version}. Independent prototype, not an official service.`;
+  const byTag = {};
+  for (const [path, ops] of Object.entries(spec.paths)) for (const [m, op] of Object.entries(ops)) (byTag[op.tags[0]] = byTag[op.tags[0]] || []).push({ path, m: m.toUpperCase(), op });
+  const order = ["Phone", "Tickets", "Metrics", "Map", "Auth", "System"];
+  const box = $("#eps"), toc = $("#toc");
+  toc.append(h("a", { href: "#pages" }, "Pages"));
+  box.append(h("h2.tag-h#pages", "Pages"), h("table.tbl", h("tbody", spec["x-pages"].map((p) => h("tr", h("td", h("a.path", { href: p.path }, p.path)), h("td", p.description))))));
+  for (const tag of order.concat(Object.keys(byTag).filter((t) => !order.includes(t)))) {
+    if (!byTag[tag]) continue;
+    toc.append(h("a", { href: "#" + tag }, tag));
+    box.append(h("h2.tag-h", { id: tag }, tag));
+    for (const e of byTag[tag]) box.append(h("div.ep",
+      h("div.ep-line", h("span.m." + e.m, e.m), h("span.path", e.path), h("span.auth" + (e.op["x-auth"] === "public" ? ".public" : ""), e.op["x-auth"])),
+      h("p", e.op.summary),
+      h("dl.io", e.op["x-request"] ? [h("dt", "Request"), h("dd", e.op["x-request"])] : null, h("dt", "Returns"), h("dd", e.op.responses["200"].description))));
+  }
+})();
+</script>
+</body>
+</html>

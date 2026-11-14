@@ -1,0 +1,377 @@
+{
+ "run_at": "2026-11-14 10:40 UTC",
+ "n_cases": 58,
+ "sources": [
+  "synthetic"
+ ],
+ "extractor": "rules",
+ "extraction_sources": {
+  "rules": 58
+ },
+ "required_fields_all_correct": {
+  "correct": 55,
+  "n": 58,
+  "rate": 0.948
+ },
+ "fields": {
+  "village": {
+   "correct": 58,
+   "n": 58,
+   "rate": 1.0
+  },
+  "source_type": {
+   "correct": 58,
+   "n": 58,
+   "rate": 1.0
+  },
+  "fault": {
+   "correct": 55,
+   "n": 58,
+   "rate": 0.948
+  },
+  "duration_days": {
+   "correct": 25,
+   "n": 25,
+   "rate": 1.0
+  },
+  "households_affected": {
+   "correct": 17,
+   "n": 17,
+   "rate": 1.0
+  },
+  "drinking_source": {
+   "correct": 7,
+   "n": 7,
+   "rate": 1.0
+  }
+ },
+ "rules_baseline": {
+  "village": {
+   "correct": 58,
+   "n": 58,
+   "rate": 1.0
+  },
+  "source_type": {
+   "correct": 58,
+   "n": 58,
+   "rate": 1.0
+  },
+  "fault": {
+   "correct": 55,
+   "n": 58,
+   "rate": 0.948
+  },
+  "duration_days": {
+   "correct": 25,
+   "n": 25,
+   "rate": 1.0
+  },
+  "households_affected": {
+   "correct": 17,
+   "n": 17,
+   "rate": 1.0
+  },
+  "drinking_source": {
+   "correct": 7,
+   "n": 7,
+   "rate": 1.0
+  }
+ },
+ "sets": {
+  "held-out": {
+   "n": 15,
+   "required_fields_all_correct": {
+    "correct": 12,
+    "n": 15,
+    "rate": 0.8
+   },
+   "fields": {
+    "village": {
+     "correct": 15,
+     "n": 15,
+     "rate": 1.0
+    },
+    "source_type": {
+     "correct": 15,
+     "n": 15,
+     "rate": 1.0
+    },
+    "fault": {
+     "correct": 12,
+     "n": 15,
+     "rate": 0.8
+    },
+    "duration_days": {
+     "correct": 4,
+     "n": 4,
+     "rate": 1.0
+    },
+    "households_affected": {
+     "correct": 2,
+     "n": 2,
+     "rate": 1.0
+    },
+    "drinking_source": {
+     "correct": 1,
+     "n": 1,
+     "rate": 1.0
+    }
+   },
+   "rules_baseline": {
+    "village": {
+     "correct": 15,
+     "n": 15,
+     "rate": 1.0
+    },
+    "source_type": {
+     "correct": 15,
+     "n": 15,
+     "rate": 1.0
+    },
+    "fault": {
+     "correct": 12,
+     "n": 15,
+     "rate": 0.8
+    },
+    "duration_days": {
+     "correct": 4,
+     "n": 4,
+     "rate": 1.0
+    },
+    "households_affected": {
+     "correct": 2,
+     "n": 2,
+     "rate": 1.0
+    },
+    "drinking_source": {
+     "correct": 1,
+     "n": 1,
+     "rate": 1.0
+    }
+   }
+  },
+  "regression": {
+   "n": 43,
+   "required_fields_all_correct": {
+    "correct": 43,
+    "n": 43,
+    "rate": 1.0
+   },
+   "fields": {
+    "village": {
+     "correct": 43,
+     "n": 43,
+     "rate": 1.0
+    },
+    "source_type": {
+     "correct": 43,
+     "n": 43,
+     "rate": 1.0
+    },
+    "fault": {
+     "correct": 43,
+     "n": 43,
+     "rate": 1.0
+    },
+    "duration_days": {
+     "correct": 21,
+     "n": 21,
+     "rate": 1.0
+    },
+    "households_affected": {
+     "correct": 15,
+     "n": 15,
+     "rate": 1.0
+    },
+    "drinking_source": {
+     "correct": 6,
+     "n": 6,
+     "rate": 1.0
+    }
+   },
+   "rules_baseline": {
+    "village": {
+     "correct": 43,
+     "n": 43,
+     "rate": 1.0
+    },
+    "source_type": {
+     "correct": 43,
+     "n": 43,
+     "rate": 1.0
+    },
+    "fault": {
+     "correct": 43,
+     "n": 43,
+     "rate": 1.0
+    },
+    "duration_days": {
+     "correct": 21,
+     "n": 21,
+     "rate": 1.0
+    },
+    "households_affected": {
+     "correct": 15,
+     "n": 15,
+     "rate": 1.0
+    },
+    "drinking_source": {
+     "correct": 6,
+     "n": 6,
+     "rate": 1.0
+    }
+   }
+  }
+ },
+ "by_language": {
+  "hi": {
+   "n": 18,
+   "fields": {
+    "village": {
+     "correct": 18,
+     "n": 18,
+     "rate": 1.0
+    },
+    "source_type": {
+     "correct": 18,
+     "n": 18,
+     "rate": 1.0
+    },
+    "fault": {
+     "correct": 17,
+     "n": 18,
+     "rate": 0.944
+    },
+    "duration_days": {
+     "correct": 7,
+     "n": 7,
+     "rate": 1.0
+    },
+    "households_affected": {
+     "correct": 4,
+     "n": 4,
+     "rate": 1.0
+    },
+    "drinking_source": {
+     "correct": 3,
+     "n": 3,
+     "rate": 1.0
+    }
+   }
+  },
+  "hinglish": {
+   "n": 19,
+   "fields": {
+    "village": {
+     "correct": 19,
+     "n": 19,
+     "rate": 1.0
+    },
+    "source_type": {
+     "correct": 19,
+     "n": 19,
+     "rate": 1.0
+    },
+    "fault": {
+     "correct": 18,
+     "n": 19,
+     "rate": 0.947
+    },
+    "duration_days": {
+     "correct": 7,
+     "n": 7,
+     "rate": 1.0
+    },
+    "households_affected": {
+     "correct": 6,
+     "n": 6,
+     "rate": 1.0
+    },
+    "drinking_source": {
+     "correct": 1,
+     "n": 1,
+     "rate": 1.0
+    }
+   }
+  },
+  "mr": {
+   "n": 21,
+   "fields": {
+    "village": {
+     "correct": 21,
+     "n": 21,
+     "rate": 1.0
+    },
+    "source_type": {
+     "correct": 21,
+     "n": 21,
+     "rate": 1.0
+    },
+    "fault": {
+     "correct": 20,
+     "n": 21,
+     "rate": 0.952
+    },
+    "duration_days": {
+     "correct": 11,
+     "n": 11,
+     "rate": 1.0
+    },
+    "households_affected": {
+     "correct": 7,
+     "n": 7,
+     "rate": 1.0
+    },
+    "drinking_source": {
+     "correct": 3,
+     "n": 3,
+     "rate": 1.0
+    }
+   }
+  }
+ },
+ "median_ms": 0.7,
+ "total_ms": 104,
+ "failures": [
+  {
+   "id": "ho-mr-01",
+   "lang": "mr",
+   "text": "डोणजे गावात नळाला तीन दिवसांपासून पाणीच नाही",
+   "set": "held-out",
+   "wrong": [
+    {
+     "field": "fault",
+     "expected": "no_water",
+     "got": null
+    }
+   ]
+  },
+  {
+   "id": "ho-hi-01",
+   "lang": "hi",
+   "text": "मालखेड में पाइपलाइन से पानी बह रहा है, पूरी गली में पानी भर गया",
+   "set": "held-out",
+   "wrong": [
+    {
+     "field": "fault",
+     "expected": "leakage",
+     "got": null
+    }
+   ]
+  },
+  {
+   "id": "ho-hn-05",
+   "lang": "hinglish",
+   "text": "Gorhe Budruk mein pipeline toot gayi hai",
+   "set": "held-out",
+   "wrong": [
+    {
+     "field": "fault",
+     "expected": "broken_part",
+     "got": null
+    }
+   ]
+  }
+ ],
+ "note": "Synthetic text cases written for this prototype (not real callers). Measures the language layer only: number normaliser, extraction, validators and village matching. No speech recognition. The regression set was used while improving the rules; the held-out set never was."
+}

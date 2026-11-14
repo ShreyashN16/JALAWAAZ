@@ -1,0 +1,37 @@
+{
+  "_note": "Every threshold here is a PROTOTYPE ASSUMPTION to be reviewed with a Jal Mitra or an engineer. None of it is validated field data. Each key is explained in docs/CONFIGURATION.md.",
+  "priority": {
+    "p1_households": 100,
+    "p1_duration_days": 2,
+    "p2_duration_days": 3,
+    "p2_households": 50,
+    "repeat_window_days": 30
+  },
+  "sla_hours": { "1": 4, "2": 24, "3": 72 },
+  "calling": {
+    "max_followups": 3,
+    "max_total_questions": 5,
+    "max_verify_attempts": 3,
+    "verify_delay_hours": 6,
+    "verify_retry_hours": 3,
+    "quiet_hours": ["21:00", "07:00"],
+    "tz_offset_minutes": 330,
+    "silence_seconds": 6,
+    "max_utterance_seconds": 25
+  },
+  "gazetteer": { "accept": 88, "confirm": 70 },
+  "stt": {
+    "first_turn_languages": "mr-IN,hi-IN,en-IN",
+    "format": "transcribe",
+    "max_clip_seconds": 30,
+    "context": { "keyterms": true, "topic": true, "previous_text": true },
+    "topic": "Phone call to a rural drinking-water complaint line in {taluka} taluka, {district} district, Maharashtra, India. The caller speaks Marathi, Hindi or Hinglish and reports a problem with a handpump, borewell, tap, well, water tank or tanker: the village name, what is wrong, for how many days, and how many households are affected. Many answers are short: yes or no, a number, or a village name.",
+    "substitutions": [
+      { "patterns": ["hand pump", "hend pump"], "replacement": "handpump" },
+      { "patterns": ["bore well", "boar well"], "replacement": "borewell" }
+    ]
+  },
+  "tts": { "speed": 0.95, "spell_numbers": true, "audio_tags": true },
+  "privacy": { "transcript_retention_days": 90, "session_ttl_minutes": 15 },
+  "rate_limit": { "per_minute": 60 }
+}

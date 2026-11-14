@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Staff sign-in · Jal Awaaz</title>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/app.css">
+<style>
+  .login { max-width: 420px; margin: 8vh auto 0; padding: 0 16px; }
+  .login .panel { padding: 26px 26px 22px; }
+  .login h1 { font-size: var(--s-3xl); margin-bottom: 6px; }
+  .login p.lede { color: var(--ink-2); margin-bottom: 20px; }
+  .pin { font: 600 28px var(--display); letter-spacing: .4em; text-align: center; min-height: 56px; }
+  .roles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+  .role { border: 1px solid var(--line); border-radius: var(--r-s); padding: 12px; background: var(--surface-2); text-align: left; cursor: pointer; font: inherit; color: inherit; }
+  .role:hover { border-color: var(--teal); }
+  .role b { display: block; }
+  .role span { font-size: var(--s-xs); color: var(--muted); }
+  .err { color: var(--red-ink); font-size: var(--s-sm); min-height: 1.4em; margin-top: 8px; }
+  .demo-pins { margin-top: 18px; padding-top: 14px; border-top: 1px dashed var(--line); font-size: var(--s-xs); color: var(--muted); }
+</style>
+</head>
+<body>
+<main class="login">
+  <div class="panel">
+    <h1>Staff sign-in</h1>
+    <p class="lede">Engineers see and act on their queue. District officers see the dashboard, exports and system status.</p>
+    <form id="f" autocomplete="off">
+      <div class="field">
+        <label for="pin">PIN</label>
+        <input class="input pin" id="pin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="20" required autofocus aria-describedby="err">
+      </div>
+      <p class="err" id="err" role="alert"></p>
+      <button class="btn btn-lg" style="width:100%" type="submit">Sign in</button>
+    </form>
+    <div class="demo-pins" id="demo" hidden>
+      Demo PINs from .env (shown only while the example values are unchanged):
+      <div class="roles">
+        <button class="role" type="button" data-pin="" id="r-eng"><b>Engineer</b><span id="r-eng-pin"></span></button>
+        <button class="role" type="button" data-pin="" id="r-off"><b>District officer</b><span id="r-off-pin"></span></button>
+      </div>
+    </div>
+  </div>
+  <p class="small muted" style="margin-top:14px">Independent prototype, not an official service. Sessions last 8 hours and every change is recorded in the ticket's audit trail.</p>
+</main>
+<script src="/assets/app.js"></script>
+<script>
+(async function () {
+  const { $, api } = JA;
+  JA.topbar("/login", null);
+  const next = new URLSearchParams(location.search).get("next");
+  const m = await JA.me().catch(() => ({}));
+  if (m.demo_pins) {
+    $("#demo").hidden = false;
+    $("#r-eng").dataset.pin = m.demo_pins.engineer; $("#r-eng-pin").textContent = "PIN " + m.demo_pins.engineer + ", repair queue";
+    $("#r-off").dataset.pin = m.demo_pins.officer; $("#r-off-pin").textContent = "PIN " + m.demo_pins.officer + ", dashboard";
+    document.querySelectorAll(".role").forEach((b) => b.addEventListener("click", () => { $("#pin").value = b.dataset.pin; $("#f").requestSubmit(); }));
+  }
+  $("#f").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    $("#err").textContent = "";
+    try {
+      const r = await api("/api/login", { method: "POST", json: { pin: $("#pin").value.trim() }, noRedirect: true });
+      const safe = next && next.startsWith("/") && !next.startsWith("//") ? next : null;
+      location.href = safe && !(r.role === "officer" && safe === "/engineer") ? safe : r.role === "engineer" ? "/engineer" : "/dashboard";
+    } catch (err) { $("#err").textContent = err.message; $("#pin").select(); }
+  });
+})();
+</script>
+</body>
+</html>

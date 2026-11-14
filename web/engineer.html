@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#1D2B53">
+<title>Engineer queue · Jal Awaaz</title>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/app.css">
+<style>
+  .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--line); margin: 6px 0 16px; overflow-x: auto; }
+  .tabs button { border: 0; background: none; padding: 12px 16px 10px; font: 600 var(--s-md) var(--body); color: var(--muted); cursor: pointer;
+    border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap; }
+  .tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--ink); }
+  .tabs .n { font: 600 var(--s-sm) var(--display); margin-left: 6px; padding: 1px 7px; border-radius: 999px; background: var(--slate-wash); }
+  .tabs button[aria-selected="true"] .n { background: var(--ink); color: #fff; }
+  .jobs { display: grid; gap: 14px; }
+  .job { background: var(--surface); border: 1px solid var(--line); border-left: 6px solid var(--slate); border-radius: var(--r-m); padding: 16px 18px; }
+  .job.p1 { border-left-color: var(--red); }
+  .job.p2 { border-left-color: var(--haldi); }
+  .job.flash { animation: jobflash 1.4s ease-out; }
+  @keyframes jobflash { from { box-shadow: 0 0 0 4px var(--teal-wash); } }
+  .job-top { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .job-top h2 { font-size: var(--s-2xl); }
+  .job-top .ref { margin-left: auto; font: 600 var(--s-md) var(--display); color: var(--muted); letter-spacing: .03em; }
+  .job-what { font-size: var(--s-lg); margin: 6px 0 2px; }
+  .job-facts { display: flex; gap: 16px; flex-wrap: wrap; font-size: var(--s-sm); color: var(--ink-2); margin: 8px 0; }
+  .job-facts span { display: inline-flex; gap: 6px; align-items: center; }
+  .job-facts svg { width: 16px; height: 16px; color: var(--muted); }
+  .why { font-size: var(--s-sm); padding: 9px 12px; border-radius: var(--r-s); background: var(--surface-2); border: 1px solid var(--line-2); }
+  .why b { font-weight: 600; }
+  .alert { display: flex; gap: 8px; align-items: flex-start; padding: 9px 12px; border-radius: var(--r-s); background: var(--red-wash); color: var(--red-ink); font-size: var(--s-sm); font-weight: 600; margin-top: 10px; }
+  .alert svg { width: 18px; height: 18px; flex: none; }
+  .sla { display: inline-flex; align-items: center; gap: 6px; font-size: var(--s-sm); font-weight: 600; padding: 4px 10px; border-radius: 999px; background: var(--slate-wash); color: var(--ink-2); }
+  .sla.over { background: var(--red); color: #fff; }
+  .sla.soon { background: var(--haldi-wash); color: var(--haldi-ink); }
+  .sla svg { width: 15px; height: 15px; }
+  .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+  .actions .btn-lg { flex: 1 1 200px; }
+  details.words { margin-top: 10px; font-size: var(--s-sm); }
+  details.words summary { cursor: pointer; color: var(--teal-ink); font-weight: 600; }
+  details.words p { margin: 8px 0 0; font-size: 16px; }
+  .wait-note { display: flex; gap: 10px; align-items: center; margin-top: 12px; padding: 10px 12px; border-radius: var(--r-s); background: var(--haldi-wash); color: var(--haldi-ink); font-size: var(--s-sm); }
+  .wait-note svg { width: 18px; height: 18px; flex: none; }
+  .sheet h2 { font-size: var(--s-2xl); margin-bottom: 6px; }
+  .sheet .lede { color: var(--ink-2); margin-bottom: 14px; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0 10px; }
+  .chips button { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 6px 12px; font: var(--s-xs) var(--body); cursor: pointer; color: var(--ink); }
+  .chips button:hover { border-color: var(--teal); }
+  .closed-line { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-size: var(--s-sm); color: var(--ink-2); margin-top: 8px; }
+</style>
+</head>
+<body>
+<main class="wrap-narrow">
+  <div class="page-head" style="margin-bottom:4px">
+    <div><h1>Your queue</h1><div class="sub">Most urgent first. A ticket closes only when the caller confirms the water runs.</div></div>
+    <span class="spacer"></span><span class="badge-live" id="live"><i></i><span>Connecting…</span></span>
+  </div>
+  <div class="tabs" role="tablist" aria-label="Queue">
+    <button role="tab" data-tab="todo" aria-selected="true">To do<span class="n" id="n-todo">0</span></button>
+    <button role="tab" data-tab="wait" aria-selected="false">Awaiting caller<span class="n" id="n-wait">0</span></button>
+    <button role="tab" data-tab="done" aria-selected="false">Closed<span class="n" id="n-done">0</span></button>
+  </div>
+  <label class="switch small" style="margin-bottom:14px"><input type="checkbox" id="f-syn" checked> Show synthetic demo tickets</label>
+  <div class="jobs" id="jobs" aria-live="polite"></div>
+</main>
+<script src="/assets/app.js"></script>
+<script src="/assets/engineer.js"></script>
+</body>
+</html>

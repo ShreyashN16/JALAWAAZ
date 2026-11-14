@@ -1,0 +1,7 @@
+file,lang,source,transcript,village,source_type,fault,duration_days,households,drinking_source,priority
+mr_01.wav,mr,synthetic,शिवापूर मध्ये हातपंप तीन दिवस बंद आहे चाळीस घरांना पाणी नाही,Khed Shivapur,handpump,no_water,3,40,,2
+mr_02.wav,mr,synthetic,डोणजे गावात नळाला गढूळ पाणी येते हेच पिण्याचे पाणी आहे मुलांना जुलाब झाले,Donje,tap,contamination,,,true,1
+mr_03.wav,mr,synthetic,कुडजे गावातील बोअरवेलची मोटर जळाली वीज नाही दोन दिवस झाले,Kudje,borewell,power,2,,,3
+hi_01.wav,hi,synthetic,सांगरूण गाँव में कुआँ सूख गया है पाँच दिन से पानी नहीं सौ घर परेशान हैं,Sangrun,well,no_water,5,100,,1
+hinglish_01.wav,hinglish,synthetic,Donje gaon ka handpump kharab hai teen din se pani nahi aa raha,Donje,handpump,broken_part,3,,,2
+hinglish_02.wav,hinglish,synthetic,Khanapur mein tanki se paani leak ho raha hai pachas ghar affected hain,Khanapur,tank,leakage,,50,,2

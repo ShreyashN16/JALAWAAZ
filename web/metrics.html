@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Evaluation and system · Jal Awaaz</title>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/app.css">
+<style>
+  .cols { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 16px; align-items: start; }
+  .stack16 > * + * { margin-top: 16px; }
+  .acc { display: grid; grid-template-columns: 1fr 90px; gap: 6px; align-items: center; }
+  .acc .bar { height: 9px; }
+  .acc b { font: 600 var(--s-md) var(--display); text-align: right; }
+  .headline { display: flex; gap: 22px; flex-wrap: wrap; padding: 4px 0 14px; }
+  .headline > div { flex: 1 1 200px; }
+  .headline div b { display: block; font: 600 var(--s-3xl)/1.1 var(--display); }
+  .headline div span { font-size: var(--s-xs); color: var(--muted); }
+  .fail { padding: 9px 0; border-top: 1px solid var(--line-2); font-size: var(--s-sm); }
+  .fail .deva { font-size: 15px; }
+  .fail .w { color: var(--red-ink); font-size: var(--s-xs); margin-top: 2px; }
+  pre.cmd { background: var(--ink); color: #E6ECF8; padding: 12px 14px; border-radius: var(--r-s); overflow-x: auto; font-size: 13px; margin: 10px 0; }
+  .warn-list { list-style: none; margin: 0; padding: 0; }
+  .warn-list li { display: flex; gap: 8px; padding: 8px 0; border-top: 1px solid var(--line-2); font-size: var(--s-sm); }
+  .warn-list li:first-child { border-top: 0; }
+  .warn-list svg { width: 18px; height: 18px; color: var(--haldi-ink); flex: none; }
+  @media (max-width: 1100px) { .cols { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="page-head">
+    <div><h1>Evaluation</h1><div class="sub">Every number on this page was measured on this server, and each one shows its n. Nothing here is typed in by hand.</div></div>
+  </div>
+  <div class="cols">
+    <div class="stack16">
+      <section class="panel" id="p-text">
+        <div class="panel-head"><h2>Understanding the complaint</h2><span class="hint">Text evaluation, no speech, no credits</span><span class="spacer"></span>
+          <button class="btn btn-sm" id="run-text" type="button" hidden>Run now</button></div>
+        <div class="panel-body" id="text-body"><div class="skeleton" style="height:120px"></div></div>
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h2>Speech recognition on recorded clips</h2><span class="hint">Prisma word error rate, uses credits</span></div>
+        <div class="panel-body" id="audio-body"></div>
+      </section>
+    </div>
+    <div class="stack16">
+      <section class="panel">
+        <div class="panel-head"><h2>Live Gnani calls</h2><span class="hint">From the call log of this server</span></div>
+        <div class="panel-body" id="live-body"></div>
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h2>Calls handled</h2></div>
+        <div class="panel-body" id="calls-body"></div>
+      </section>
+      <section class="panel" id="p-sys" hidden>
+        <div class="panel-head"><h2>System</h2><span class="spacer"></span><button class="btn btn-sm btn-quiet" id="check" type="button" hidden>Check Gnani key</button></div>
+        <div class="panel-body" id="sys-body"></div>
+      </section>
+    </div>
+  </div>
+</main>
+<script src="/assets/app.js"></script>
+<script>
+(async function () {
+  const { $, h, icon, api, toast, pct, when } = JA;
+  const me = await JA.me().catch(() => ({}));
+  JA.topbar("/metrics", me.role);
+  const FIELD = { village: "Village", source_type: "Water source", fault: "Fault", duration_days: "Days", households_affected: "Households", drinking_source: "Drinking water" };
+  const rateCls = (r) => (r == null ? "" : r >= 0.9 ? ".rate-good" : r >= 0.7 ? ".rate-mid" : ".rate-bad");
+  const accCell = (a) => h("div.acc", h("div.bar" + rateCls(a.rate), h("i", { style: { width: ((a.rate || 0) * 100) + "%" } })), h("b", a.rate == null ? "–" : pct(a.rate)));
+
+  function renderText(t) {
+    const b = $("#text-body"); b.innerHTML = "";
+    if (!t) {
+      b.append(h("div.empty", h("h3", "Not run yet"), me.role ? "Press “Run now”. It takes about a second and spends no Gnani credits." : "Sign in as staff to run it, or run python -m bench.text_eval on the server."));
+      return;
+    }
+    const ho = t.sets && t.sets["held-out"], rg = t.sets && t.sets.regression;
+    const big = (st, nm, why) => st ? h("div", h("b", pct(st.required_fields_all_correct.rate)),
+      h("span", `${nm}: village, source and fault all right in ${st.required_fields_all_correct.correct} of ${st.n}. ${why}`)) : null;
+    b.append(h("div.headline",
+      big(ho, "Held-out set", "Never used to tune the rules."),
+      big(rg, "Regression set", "Used while improving the rules, so it is not a fair test.")),
+      h("p.small", { style: { margin: "0 0 10px" } }, t.extractor === "evon" ? "Extracted by Evon; the rule-based baseline is measured alongside." : "Extracted by the rule-based fallback (Evon is not reachable from this server)."));
+    const tb = h("tbody");
+    for (const [k, nm] of Object.entries(FIELD)) {
+      const a1 = ho ? ho.fields[k] : null, a2 = rg ? rg.fields[k] : null;
+      tb.append(h("tr", h("td", nm),
+        h("td", { style: { width: "32%" } }, a1 && a1.n ? accCell(a1) : "–"), h("td.r", a1 ? `${a1.correct}/${a1.n}` : ""),
+        h("td", { style: { width: "32%" } }, a2 && a2.n ? accCell(a2) : "–"), h("td.r", a2 ? `${a2.correct}/${a2.n}` : "")));
+    }
+    b.append(h("div.tbl-scroll", h("table.tbl", h("thead", h("tr", h("th", "Field"), h("th", "Held-out"), h("th.r", "n"), h("th", "Regression"), h("th.r", "n"))), tb)));
+    const langs = Object.entries(t.by_language);
+    const lt = h("tbody");
+    for (const [lang, v] of langs) lt.append(h("tr", h("td", { mr: "Marathi", hi: "Hindi", hinglish: "Hinglish" }[lang] || lang), h("td.r", String(v.n)),
+      ...["village", "source_type", "fault"].map((k) => h("td.r", pct(v.fields[k].rate)))));
+    b.append(h("h3", { style: { margin: "18px 0 6px", fontSize: "var(--s-md)" } }, "By language"),
+      h("table.tbl", h("thead", h("tr", h("th", "Language"), h("th.r", "n"), h("th.r", "Village"), h("th.r", "Source"), h("th.r", "Fault"))), lt));
+    const fails = t.failures || [];
+    const det = h("details", { style: { marginTop: "16px" } }, h("summary", { style: { cursor: "pointer", fontWeight: 600 } }, `${fails.length} case${fails.length === 1 ? "" : "s"} with at least one wrong field`),
+      fails.map((f) => h("div.fail", h("div", h("span.muted.small", `${f.set}, ${f.id}  `), h("span.deva", f.text)),
+        h("div.w", f.wrong.map((w) => `${FIELD[w.field] || w.field}: expected ${w.expected}, got ${w.got == null ? "nothing" : w.got}`).join("; ")))));
+    b.append(det, h("p.small.muted", { style: { marginTop: "12px" } }, `${t.note} Run ${t.run_at}. Median ${t.median_ms} ms per case.`));
+  }
+
+  function renderAudio(bm) {
+    const b = $("#audio-body"); b.innerHTML = "";
+    if (!bm) {
+      b.append(h("p", "No audio benchmark has been run on this server yet. It needs consented or synthetic recordings and spends Gnani credits, so it runs from the command line:"),
+        h("pre.cmd", "1. Put clips in bench/clips/ and list them in bench/clips/gold.csv\n2. python -m bench.make_noisy      # clean, 10 dB, 5 dB, 8 kHz phone line\n3. python -m bench.run_bench       # Prisma on every clip; results cached\n4. Reload this page"),
+        h("p.small.muted", "Results are reported separately for real and synthetic clips, with failure rows. See docs/TESTING.md."));
+      return;
+    }
+    b.append(h("p.small.muted", `Run ${bm.run_at}. ${bm.summary}`));
+    for (const t of bm.tables) {
+      b.append(h("h3", { style: { margin: "14px 0 6px", fontSize: "var(--s-md)" } }, t.title),
+        h("div.tbl-scroll", h("table.tbl", h("thead", h("tr", t.columns.map((c) => h("th", c)))), h("tbody", t.rows.map((r) => h("tr", r.map((c) => h("td", c == null ? "" : String(c)))))))),
+        t.note ? h("p.small.muted", t.note) : null);
+    }
+  }
+
+  function renderLive(j) {
+    const b = $("#live-body"); b.innerHTML = "";
+    if (j.credits_exhausted) b.append(h("p", { style: { color: "var(--red-ink)", fontWeight: 600 } }, "Gnani reported no credit (402). Voice is off until the server restarts with credit."));
+    if (!j.live_api_calls.length) { b.append(h("div.empty", h("h3", "No Gnani calls yet"), "Make a call from the villager phone with GNANI_API_KEY set. Every request is logged here with its status and latency, never its audio or text.")); return; }
+    const NAMES = { stt: "Prisma speech to text", tts: "Timbre voice (file)", "tts-stream": "Timbre voice (streamed)", llm: "Evon extraction", "stt-meta": "Key check" };
+    b.append(h("table.tbl", h("thead", h("tr", h("th", "Service"), h("th.r", "Calls"), h("th.r", "OK"), h("th.r", "p50"), h("th.r", "p95"))),
+      h("tbody", j.live_api_calls.map((r) => { const l = j.live_latency_ms[r.service] || {};
+        return h("tr", h("td", NAMES[r.service] || r.service, h("div.small.muted", r.model)), h("td.r", String(r.calls)), h("td.r", String(r.ok || 0)),
+          h("td.r", l.p50 != null ? l.p50 + " ms" : "–"), h("td.r", l.p95 != null ? l.p95 + " ms" : "–")); }))));
+    const fa = j.live_latency_ms["tts-first-audio"];
+    if (fa) b.append(h("p.small", { style: { marginTop: "10px" } }, `Streamed voice starts playing after ${fa.p50} ms (p50, n = ${fa.n}), instead of waiting for the whole file.`));
+    if (j.api_errors && j.api_errors.length) b.append(h("h3", { style: { margin: "14px 0 6px", fontSize: "var(--s-md)" } }, "Errors"),
+      h("table.tbl", h("tbody", j.api_errors.map((e) => h("tr", h("td", NAMES[e.service] || e.service), h("td", `HTTP ${e.status || "none"} ${e.error_kind || ""}`), h("td.r", String(e.n)), h("td.r.small.muted", when(e.last_at)))))));
+  }
+
+  function renderCalls(j) {
+    const b = $("#calls-body"); b.innerHTML = "";
+    if (!j.calls.length) { b.append(h("div.empty", "No calls yet.")); return; }
+    b.append(h("table.tbl", h("thead", h("tr", h("th", "Kind"), h("th.r", "Calls"), h("th.r", "Turns"), h("th.r", "Per turn"), h("th", "Outcomes"))),
+      h("tbody", j.calls.map((c) => h("tr", h("td", c.kind === "report" ? "Report" : "Verification"), h("td.r", String(c.n)), h("td.r", String(c.avg_turns)),
+        h("td.r", c.avg_turn_ms != null ? (c.avg_turn_ms / 1000).toFixed(1) + " s" : "–"),
+        h("td.small", c.kind === "report" ? `${c.tickets || 0} tickets, ${c.handoffs || 0} handed to a person` : `${c.verified || 0} yes, ${c.reopened || 0} no`) )))),
+      h("p.small.muted", { style: { marginTop: "8px" } }, "Per turn = time from receiving the caller's answer until the reply text is ready (speech recognition plus extraction). Voice streams after that."));
+  }
+
+  async function renderSys() {
+    if (!me.role) return;
+    $("#p-sys").hidden = false;
+    const s = await api("/api/system");
+    const b = $("#sys-body"); b.innerHTML = "";
+    if (s.warnings.length) b.append(h("ul.warn-list", s.warnings.map((w) => h("li", h("span", { html: icon("alert") }), h("span", w)))));
+    const p = s.providers;
+    b.append(h("dl.kv", { style: { marginTop: "12px" } },
+      h("dt", "Version"), h("dd", `${s.version}, Python ${s.python}`),
+      h("dt", "Speech"), h("dd", p.stt.provider === "prisma" ? `${p.stt.model}, ${p.stt.format}` : "off"),
+      h("dt", "Voice"), h("dd", p.tts.provider === "timbre" ? `${p.tts.model}: ${p.tts.voices.mr} / ${p.tts.voices.hi}, ${p.tts.format}${p.tts.streaming ? ", streamed" : ""}` : "browser voice"),
+      h("dt", "Extraction"), h("dd", p.llm.provider === "evon" ? `Evon at ${p.llm.base_url}` : "rules"),
+      h("dt", "Mode"), h("dd", s.demo_mode ? `Demo: callback ${s.timings.callback_delay_sec} s, verification ${s.timings.verify_delay_sec} s after a fix` : "Real timings"),
+      h("dt", "Data"), h("dd", `${s.counts.tickets} tickets (${s.counts.synthetic_tickets} synthetic), ${s.counts.calls} calls, ${s.counts.villages_on_map} of ${s.counts.villages} villages on the map`),
+      h("dt", "Priority rules"), h("dd", `P1 at ≥${s.config.priority.p1_households} households for ≥${s.config.priority.p1_duration_days} days, or drinking water with symptoms or contamination. P2 at ≥${s.config.priority.p2_duration_days} days or ≥${s.config.priority.p2_households} households, or a repeat within ${s.config.priority.repeat_window_days} days.`),
+      h("dt", "SLA"), h("dd", `P1 ${s.config.sla_hours["1"]} h, P2 ${s.config.sla_hours["2"]} h, P3 ${s.config.sla_hours["3"]} h. A missed SLA raises priority one level.`),
+      h("dt", "Calling"), h("dd", `Up to ${s.config.calling.max_verify_attempts} verification attempts, never ${s.config.calling.quiet_hours[0]}–${s.config.calling.quiet_hours[1]} in real mode.`)),
+      h("p.small.muted", { style: { marginTop: "10px" } }, "Thresholds live in data/config.json and are prototype assumptions to review with a Jal Mitra or an engineer."));
+    if (me.role === "officer") $("#check").hidden = false;
+  }
+
+  async function loadAll() {
+    const j = await api("/api/bench");
+    renderText(j.text_eval); renderAudio(j.benchmark); renderLive(j); renderCalls(j);
+  }
+  if (me.role) $("#run-text").hidden = false;
+  $("#run-text").addEventListener("click", async (e) => {
+    e.currentTarget.disabled = true; e.currentTarget.textContent = "Running…";
+    try { renderText(await api("/api/bench/run-text", { method: "POST" })); toast("Text evaluation finished.", "ok"); }
+    catch (err) { toast(err.message, "err"); }
+    e.currentTarget.disabled = false; e.currentTarget.textContent = "Run again";
+  });
+  $("#check").addEventListener("click", async (e) => {
+    e.currentTarget.disabled = true;
+    try { const r = await api("/api/system/check-gnani", { method: "POST" }); toast(r.ok ? `Gnani accepted the key (${r.ms} ms).` : `Gnani check failed: ${r.message}`, r.ok ? "ok" : "err"); }
+    catch (err) { toast(err.message, "err"); }
+    e.currentTarget.disabled = false;
+  });
+  await loadAll().catch((e) => toast(e.message, "err"));
+  renderSys().catch((e) => toast(e.message, "err"));
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="mr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1D2B53">
+<title>Jal Awaaz phone</title>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/app.css">
+<link rel="stylesheet" href="/assets/phone.css">
+</head>
+<body class="phone-page">
+<main class="stage">
+  <div class="device" id="device">
+    <div class="sbar"><span id="clock" class="num">--:--</span><span class="tag-sim">Simulated phone</span></div>
+
+    <!-- HOME -->
+    <section class="screen" id="s-home" data-screen>
+      <header class="ph-head">
+        <div class="ph-brand"><span class="ph-drop"></span><span class="ph-name">जल आवाज</span></div>
+        <p class="ph-title" data-t="title"></p>
+        <p class="ph-sub" data-t="sub"></p>
+      </header>
+      <div class="langs" role="group" aria-label="Language">
+        <button type="button" data-lang="mr" lang="mr">मराठी</button>
+        <button type="button" data-lang="hi" lang="hi">हिंदी</button>
+        <button type="button" data-lang="hinglish" lang="en">Hinglish</button>
+      </div>
+      <button class="call-big" id="btn-missed" type="button">
+        <span class="call-ic"></span>
+        <span><span class="call-t" data-t="missed"></span><small class="gloss">Give a missed call</small></span>
+      </button>
+      <p class="ph-free" data-t="free"></p>
+      <ol class="ph-steps"><li data-t="step1"></li><li data-t="step2"></li><li data-t="step3"></li></ol>
+      <button class="ph-link" id="btn-mine" type="button"><span data-t="mine"></span><span class="count" id="mine-count"></span></button>
+      <div class="ph-foot">
+        <label class="switch small"><input type="checkbox" id="tel"> <span data-t="tel"></span></label>
+        <p class="ph-ai" data-t="ai"></p>
+      </div>
+    </section>
+
+    <!-- WAITING FOR CALLBACK -->
+    <section class="screen center" id="s-wait" data-screen hidden>
+      <div class="wait-ring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" class="wr-bg"/><circle cx="60" cy="60" r="52" class="wr-fg" id="wait-arc"/></svg><span class="num" id="wait-n">5</span></div>
+      <p class="ph-title" data-t="wait"></p>
+      <p class="ph-sub"><span data-t="waitSub"></span><br><small class="gloss">Callback is simulated. It rings this page.</small></p>
+      <button class="ph-link" id="btn-cancel" type="button" data-t="cancel"></button>
+    </section>
+
+    <!-- RINGING -->
+    <section class="screen ring" id="s-ring" data-screen hidden>
+      <p class="ring-kind" id="ring-kind"></p>
+      <div class="ring-orb ripple"><i></i><i></i><i></i><span class="ph-drop big"></span></div>
+      <p class="ring-name">जल आवाज</p>
+      <p class="ring-sub" id="ring-sub"></p>
+      <div class="ring-actions">
+        <button class="round decline" id="btn-decline" type="button" aria-label="Decline"><span class="ic-hang"></span><small data-t="decline"></small></button>
+        <button class="round answer" id="btn-answer" type="button" aria-label="Answer"><span class="ic-phone"></span><small data-t="answer"></small></button>
+      </div>
+    </section>
+
+    <!-- IN CALL -->
+    <section class="screen call" id="s-call" data-screen hidden>
+      <header class="call-top">
+        <div><div class="call-who">जल आवाज <span class="ai-badge">AI</span></div><div class="call-meta"><span class="num" id="timer">00:00</span><span id="call-kind"></span><span class="tel-on" id="tel-on" hidden>8 kHz line</span></div></div>
+        <button class="icon-btn" id="btn-replay" type="button" aria-label="Play the last reply again" title="Play again"></button>
+      </header>
+      <div class="orb-zone">
+        <div class="orb ripple" id="orb" data-mode="idle"><i></i><i></i><i></i><div class="orb-core"><span class="orb-ic" id="orb-ic"></span></div></div>
+        <p class="orb-state" id="orb-state"></p>
+      </div>
+      <div class="caption" id="caption" aria-live="polite"></div>
+      <p class="heard" id="heard"></p>
+      <div class="quick" id="quick" hidden></div>
+      <form class="typebox" id="typebox" hidden>
+        <input class="input" id="typed" autocomplete="off" maxlength="300">
+        <button class="btn" type="submit" data-t="send"></button>
+      </form>
+      <footer class="call-bar">
+        <button class="icon-btn" id="btn-type" type="button" aria-label="Type instead"></button>
+        <button class="talk" id="btn-talk" type="button"><span class="talk-ic"></span><span class="talk-t" id="talk-t"></span></button>
+        <button class="round sm decline" id="btn-hang" type="button" aria-label="End call"><span class="ic-hang"></span></button>
+      </footer>
+      <label class="auto"><input type="checkbox" id="auto" checked> <span data-t="auto"></span></label>
+    </section>
+
+    <!-- CALL RESULT -->
+    <section class="screen center" id="s-end" data-screen hidden>
+      <div class="end-badge" id="end-badge"></div>
+      <h2 class="end-title" id="end-title"></h2>
+      <div class="end-ref" id="end-ref" hidden><small data-t="ticketNo"></small><span class="num" id="end-refnum"></span></div>
+      <p class="end-text" id="end-text"></p>
+      <ul class="end-next" id="end-next"></ul>
+      <button class="btn btn-lg" id="btn-home" type="button" data-t="back"></button>
+    </section>
+
+    <!-- MY COMPLAINTS -->
+    <section class="screen" id="s-mine" data-screen hidden>
+      <header class="mine-head"><button class="icon-btn" id="btn-mine-back" type="button" aria-label="Back"></button><h2 data-t="mine"></h2></header>
+      <ul class="mine" id="mine-list"></ul>
+    </section>
+  </div>
+
+  <aside class="rail" aria-label="Behind the call">
+    <div class="rail-head">
+      <h2>Behind the call</h2>
+      <p class="muted small">What a viewer of the demo can see. The caller only hears the voice.</p>
+      <div class="row-wrap" id="prov"></div>
+    </div>
+    <section class="rail-sec">
+      <h3>Conversation</h3>
+      <ol class="convo" id="convo"><li class="convo-empty muted small">Give a missed call to start. Every turn appears here with the model that handled it.</li></ol>
+    </section>
+    <section class="rail-sec">
+      <h3>What Jal Awaaz has understood</h3>
+      <dl class="slots" id="slots"></dl>
+      <p class="muted small">Fields come from the extraction step and are cleaned by rules in code. The caller confirms them before any ticket.</p>
+    </section>
+    <section class="rail-sec">
+      <h3>Last turn timings</h3>
+      <div class="timings" id="timings"><span class="muted small">No turn yet.</span></div>
+    </section>
+  </aside>
+</main>
+<audio id="voice" preload="auto"></audio>
+<script src="/assets/app.js"></script>
+<script src="/assets/phone.js"></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+.env
+*.db
+*.db-wal
+*.db-shm
+__pycache__/
+.pytest_cache/
+.venv/
+tts_cache/
+logs/
+samples/
+bench/clips/*
+!bench/clips/gold.csv
+bench/noise/*
+bench/results/*
+!bench/results/.gitkeep
+!bench/results/text_eval.json

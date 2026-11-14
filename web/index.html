@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Jal Awaaz: report a water fault by voice, close it only when the water runs</title>
+<meta name="description" content="Independent prototype. A missed call, an AI callback in Marathi, Hindi or Hinglish, and a second call that checks the repair.">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/app.css">
+<style>
+  .hero { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 36px; align-items: center; padding: 26px 0 30px; }
+  .hero-word { font: 700 clamp(56px, 8vw, 104px)/0.95 var(--deva); color: var(--ink); letter-spacing: -0.01em; margin: 0 0 18px; }
+  .hero h1 { font-size: clamp(26px, 2.6vw, 34px); max-width: 17em; margin-bottom: 14px; }
+  .hero p.lede { font-size: var(--s-lg); color: var(--ink-2); max-width: 34em; }
+  .hero .row-wrap { margin-top: 22px; }
+  .loop-wrap { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-s); padding: 8px; }
+  .loop-wrap svg { display: block; width: 100%; height: auto; }
+  .loop-cap { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; padding: 6px 10px 8px; font-size: var(--s-xs); color: var(--muted); }
+  .st-label { font: 600 13px var(--body); fill: var(--ink); }
+  .st-sub { font: 11.5px var(--body); fill: var(--muted); }
+  .st-num { font: 600 22px var(--display); fill: var(--ink); }
+  .st-idx { font: 700 11px var(--display); fill: #fff; }
+  .doors { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 2px solid var(--ink); margin-top: 8px; }
+  .door { padding: 18px 20px 20px 0; }
+  .door + .door { padding-left: 20px; border-left: 1px solid var(--line); }
+  .door h2 { display: flex; gap: 10px; align-items: center; font-size: var(--s-xl); margin-bottom: 4px; }
+  .door .who { font-size: var(--s-xs); color: var(--muted); margin-bottom: 10px; }
+  .door p { color: var(--ink-2); font-size: var(--s-sm); }
+  .door .btn { margin-top: 6px; }
+  .sec-title { display: flex; align-items: baseline; gap: 14px; margin: 40px 0 12px; }
+  .sec-title h2 { font-size: var(--s-2xl); }
+  .real td:first-child { font-weight: 600; white-space: nowrap; }
+  .acts { counter-reset: act; list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; }
+  .acts li { counter-increment: act; padding: 14px 16px 16px; border-top: 3px solid var(--line); position: relative; }
+  .acts li::before { content: counter(act); display: block; font: 600 var(--s-3xl)/1 var(--display); color: var(--teal); margin-bottom: 8px; }
+  .acts li strong { display: block; margin-bottom: 4px; }
+  .acts li span { font-size: var(--s-sm); color: var(--ink-2); }
+  .acts li.where-phone { border-top-color: var(--teal); }
+  .acts li.where-laptop { border-top-color: var(--ink); }
+  footer.site { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--line); font-size: var(--s-xs); color: var(--muted); display: flex; gap: 18px; flex-wrap: wrap; }
+  @media (max-width: 980px) { .hero { grid-template-columns: 1fr; } .doors { grid-template-columns: 1fr; }
+    .door + .door { padding-left: 0; border-left: 0; border-top: 1px solid var(--line); } .acts { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .acts { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <section class="hero">
+    <div>
+      <p class="hero-word" lang="mr">जल आवाज</p>
+      <h1>A water fault is closed only when the person who reported it says the water runs.</h1>
+      <p class="lede">Give a missed call. An AI assistant calls back in Marathi, Hindi or Hinglish, reads the complaint back, and opens a ticket. After the engineer reports a fix, it calls again and asks one question. A “no” reopens the ticket at higher priority.</p>
+      <div class="row-wrap">
+        <a class="btn btn-lg" href="/phone"><span data-ic="phone"></span>Try the villager phone</a>
+        <a class="btn btn-lg btn-quiet" href="/dashboard">Open the district dashboard</a>
+      </div>
+    </div>
+    <figure class="loop-wrap" aria-labelledby="loop-cap">
+      <svg id="loop" viewBox="0 0 640 440" role="img" aria-label="The report and verification loop with live counts"></svg>
+      <figcaption class="loop-cap" id="loop-cap"><span id="loop-src">Loading live counts…</span><span class="spacer"></span><label class="switch"><input type="checkbox" id="syn" checked> Include synthetic demo tickets</label></figcaption>
+    </figure>
+  </section>
+
+  <div class="doors">
+    <section class="door">
+      <h2><span data-ic="phone"></span>Villager phone</h2>
+      <div class="who">For anyone reporting a fault. Works on a phone browser.</div>
+      <p>Pick a language, give a missed call, answer the callback and describe the problem in your own words. You get a ticket number, and later a call that checks the repair.</p>
+      <a class="btn" href="/phone">Open the phone</a>
+    </section>
+    <section class="door">
+      <h2><span data-ic="wrench"></span>Engineer queue</h2>
+      <div class="who">For the section engineer or clerk. Engineer PIN.</div>
+      <p>Jobs sorted by priority and time left before escalation, each with the reason for its priority. Acknowledge, then report the fix. Reporting a fix never closes a ticket.</p>
+      <a class="btn btn-quiet" href="/engineer">Open the queue</a>
+    </section>
+    <section class="door">
+      <h2><span data-ic="pin"></span>District dashboard</h2>
+      <div class="who">For the district officer. Officer or engineer PIN.</div>
+      <p>Every ticket on a map of the pilot villages, the false-closure rate with its n, SLA breaches, repeat failures and the full audit trail of each ticket.</p>
+      <a class="btn btn-quiet" href="/dashboard">Open the dashboard</a>
+    </section>
+  </div>
+
+  <div class="sec-title" id="real"><h2>What is real in this demo</h2><span class="muted small">Read live from this server</span></div>
+  <div class="panel tbl-scroll"><table class="tbl real" id="real-table"><thead><tr><th>Part</th><th>What runs now</th><th>Status</th></tr></thead><tbody></tbody></table></div>
+
+  <div class="sec-title"><h2>Run the five-act demo</h2><span class="muted small">Phone on one screen, laptop on the other. Timings are compressed in demo mode.</span></div>
+  <ol class="acts">
+    <li class="where-phone"><strong>Missed call</strong><span>On the phone page tap the call button. The callback rings a few seconds later.</span></li>
+    <li class="where-phone"><strong>Report</strong><span>Answer. The assistant says it is an AI. Describe the fault, hear the read-back, say “ho” or “haan”.</span></li>
+    <li class="where-laptop"><strong>Dashboard</strong><span>A red pin appears with the priority and the reason for it.</span></li>
+    <li class="where-laptop"><strong>Engineer</strong><span>Acknowledge, then report the fix. The pin turns haldi yellow.</span></li>
+    <li class="where-phone"><strong>Verification</strong><span>The phone rings again. “Yes” verifies (green). “No” reopens at higher priority and the false-closure rate moves.</span></li>
+  </ol>
+
+  <footer class="site">
+    <span>Independent prototype, not an official government service. No real complaint is sent to any authority.</span>
+    <span>Built with AI assistance.</span>
+    <a href="/docs">API reference</a><a href="/metrics">Evaluation</a>
+  </footer>
+</main>
+<script src="/assets/app.js"></script>
+<script>
+(async function () {
+  const { $, h, icon, api, topbar, me, every } = JA;
+  let role = null;
+  try { role = (await me()).role; } catch (e) {}
+  topbar("/", role);
+  document.querySelectorAll("[data-ic]").forEach((el) => (el.outerHTML = icon(el.dataset.ic)));
+
+  // ---------------------------------------------------------------- loop diagram
+  const STATIONS = [
+    { k: "report_calls", t: "Missed call, AI callback", s: "report calls answered", x: 112, y: 104, c: "var(--teal)", top: true },
+    { k: "tickets", t: "Read back, ticket opened", s: "tickets", x: 320, y: 62, c: "var(--red)", top: true },
+    { k: "acknowledged", t: "Engineer acknowledges", s: "acknowledged", x: 528, y: 104, c: "var(--red)", top: true },
+    { k: "fix_claimed", t: "Engineer reports a fix", s: "fixes claimed", x: 540, y: 300, c: "var(--haldi)" },
+    { k: "verification_calls", t: "Second call to the caller", s: "verification calls", x: 320, y: 360, c: "var(--haldi)" },
+  ];
+  const svg = $("#loop");
+  function draw(loop, fc) {
+    let s = `<defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--ink-2)"/></marker>
+      <marker id="ahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--green)"/></marker>
+      <marker id="ahr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--red)"/></marker></defs>`;
+    const P = STATIONS;
+    for (let i = 0; i < P.length - 1; i++) {
+      const a = P[i], b = P[i + 1];
+      const mx = (a.x + b.x) / 2 + (b.y - a.y) * 0.18, my = (a.y + b.y) / 2 - (b.x - a.x) * 0.18;
+      s += `<path d="M${a.x} ${a.y} Q${mx} ${my} ${b.x} ${b.y}" fill="none" stroke="var(--ink-2)" stroke-width="1.6" marker-end="url(#ah)" opacity=".6" pathLength="100" stroke-dasharray="0 15 70 15"/>`;
+    }
+    s += `<path d="M290 368 Q150 372 112 312" fill="none" stroke="var(--green)" stroke-width="2" marker-end="url(#ahg)" pathLength="100" stroke-dasharray="0 12 80 8"/>`;
+    s += `<path d="M343 338 Q400 170 502 121" fill="none" stroke="var(--red)" stroke-width="2" marker-end="url(#ahr)" stroke-dasharray="5 4"/>`;
+    P.forEach((st, i) => {
+      const v = loop ? loop[st.k] : null;
+      const tY = st.top ? st.y - 40 : st.y + 46, sY = st.top ? st.y + 44 : st.y + 62;
+      s += `<g><circle cx="${st.x}" cy="${st.y}" r="27" fill="var(--surface)" stroke="${st.c}" stroke-width="2.5"/>
+        <text x="${st.x}" y="${st.y + 8}" text-anchor="middle" class="st-num">${v == null ? "–" : v}</text>
+        <circle cx="${st.x - 22}" cy="${st.y - 21}" r="9" fill="var(--ink)"/><text x="${st.x - 22}" y="${st.y - 17}" text-anchor="middle" class="st-idx">${i + 1}</text>
+        <text x="${st.x}" y="${tY}" text-anchor="middle" class="st-label">${st.t}</text>
+        <text x="${st.x}" y="${sY}" text-anchor="middle" class="st-sub">${st.s}</text></g>`;
+    });
+    const ver = loop ? loop.verified : "–", reo = loop ? loop.reopened : "–";
+    s += `<g><rect x="34" y="250" width="128" height="54" rx="6" fill="var(--green-wash)" stroke="var(--green)"/>
+      <text x="98" y="273" text-anchor="middle" class="st-label">Caller: yes</text><text x="98" y="293" text-anchor="middle" class="st-sub">${ver} verified and closed</text></g>`;
+    s += `<g><rect x="398" y="200" width="146" height="54" rx="6" fill="var(--red-wash)" stroke="var(--red)"/>
+      <text x="471" y="223" text-anchor="middle" class="st-label">Caller: no</text><text x="471" y="243" text-anchor="middle" class="st-sub">${reo} reopened, priority up</text></g>`;
+    const rate = fc && fc.rate != null ? Math.round(fc.rate * 100) + "%" : "–";
+    s += `<text x="292" y="190" text-anchor="middle" class="st-sub">False-closure rate</text>
+      <text x="292" y="232" text-anchor="middle" style="font:600 44px var(--display);fill:var(--ink)">${rate}</text>
+      <text x="292" y="256" text-anchor="middle" class="st-sub">${fc ? `${fc.reopened} reopened of ${fc.answered} answered` : "no verification answers yet"}</text>`;
+    svg.innerHTML = s;
+  }
+  draw(null, null);
+  async function refresh() {
+    const syn = $("#syn").checked ? "1" : "0";
+    const j = await api("/api/public/summary?synthetic=" + syn);
+    draw(j.loop, j.false_closure);
+    $("#loop-src").textContent = `Live from this server's database. ${j.total} tickets` +
+      (j.synthetic_tickets ? `, ${j.synthetic_tickets} of them synthetic demo data.` : ", none synthetic.");
+  }
+  const poller = every(5000, refresh);
+  $("#syn").addEventListener("change", () => poller.now());
+
+  // ---------------------------------------------------------------- what is real
+  try {
+    const st = await api("/api/status");
+    const p = st.providers;
+    const pill = (cls, t) => h("span.provider." + cls, t);
+    const rows = [
+      ["Speech to text", p.stt.provider === "prisma" ? `Gnani Prisma (${p.stt.model}), format ${p.stt.format}, context hints: ${Object.keys(p.stt.context || {}).filter((k) => p.stt.context[k]).join(", ") || "off"}` : "Not configured: callers type their answers",
+        p.stt.provider === "prisma" ? pill("on", "Live") : pill("off", "Off")],
+      ["Spoken replies", p.tts.provider === "timbre" ? `Gnani Timbre (${p.tts.model}), voice ${p.tts.voices.mr}, ${p.tts.format.toUpperCase()}${p.tts.streaming ? ", streamed" : ""}` : "Browser voice (Timbre not configured)",
+        p.tts.provider === "timbre" ? pill("on", "Live") : pill("fallback", "Fallback")],
+      ["Understanding the complaint", p.llm.provider === "evon" ? "Evon on your own server (OpenAI-compatible)" : "Rule-based extraction (Evon not reachable or disabled)",
+        p.llm.provider === "evon" ? pill("on", "Live") : pill("fallback", "Rules")],
+      ["Phone call", "A browser page plays the phone. The callback and the verification call are simulated.", pill("off", "Simulated")],
+      ["SMS", "Messages are written to the SMS log and shown on the dashboard. Nothing is sent.", pill("off", "Simulated")],
+      ["Priority, SLA, closure", "Python rules on this server. No model decides priority or closes a ticket.", pill("on", "Real")],
+      ["Timings", st.demo_mode ? `Demo mode: callback after ${st.callback_delay_sec} s, verification call ${st.verify_delay_sec} s after a fix (time compressed)` : `Real mode: verification call ${st.verify_delay_hours} h after a fix, never 21:00–07:00`,
+        st.demo_mode ? pill("fallback", "Compressed") : pill("on", "Real")],
+    ];
+    const tb = $("#real-table tbody");
+    rows.forEach(([a, b, c]) => tb.append(h("tr", h("td", a), h("td", b), h("td", c))));
+  } catch (e) { $("#real-table tbody").append(h("tr", h("td", { colspan: 3 }, e.message))); }
+})();
+</script>
+</body>
+</html>

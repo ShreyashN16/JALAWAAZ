@@ -1,0 +1,16 @@
+id,lang,source,transcript,village,source_type,fault,duration_days,households,drinking_source
+ho-mr-01,mr,synthetic,डोणजे गावात नळाला तीन दिवसांपासून पाणीच नाही,Donje,tap,no_water,3,,
+ho-mr-02,mr,synthetic,"कुडजे येथील विहिरीचे पाणी खराब झाले आहे, वास येत आहे",Kudje,well,contamination,,,
+ho-mr-03,mr,synthetic,"कोंढणपूरचा हातपंप चालत नाही, वीस घरे अडचणीत आहेत",Kondhanpur,handpump,no_water,,20,
+ho-mr-04,mr,synthetic,खेड शिवापूरमध्ये पाण्याच्या टाकीला गळती लागली आहे,Khed Shivapur,tank,leakage,,,
+ho-mr-05,mr,synthetic,गोऱ्हे गावात बोअरवेलचा पंप दोन दिवसांपासून बंद आहे,Gorhe Budruk,borewell,no_water,2,,
+ho-hi-01,hi,synthetic,"मालखेड में पाइपलाइन से पानी बह रहा है, पूरी गली में पानी भर गया",Malkhed,tap,leakage,,,
+ho-hi-02,hi,synthetic,सांगरूण गाँव का बोरवेल तीन दिन से बंद पड़ा है,Sangrun,borewell,no_water,3,,
+ho-hi-03,hi,synthetic,"खडकवासला में नल का पानी मटमैला आ रहा है, बच्चे यही पीते हैं",Khadakwasla,tap,contamination,,,true
+ho-hi-04,hi,synthetic,कोंढणपुर के हैंडपंप का हत्था टूट गया है,Kondhanpur,handpump,broken_part,,,
+ho-hi-05,hi,synthetic,"खानापुर में टंकी की मोटर नहीं चल रही, बिजली नहीं है",Khanapur,tank,power,,,
+ho-hn-01,hinglish,synthetic,Donje mein tap se paani bilkul nahi aa raha 4 din ho gaye,Donje,tap,no_water,4,,
+ho-hn-02,hinglish,synthetic,Kudje ka handpump bahut dheere chal raha hai,Kudje,handpump,low_pressure,,,
+ho-hn-03,hinglish,synthetic,Malkhed mein well ka paani ganda aur kaala ho gaya hai,Malkhed,well,contamination,,,
+ho-hn-04,hinglish,synthetic,"Khanapur borewell motor kharab, 60 ghar paani ke bina",Khanapur,borewell,broken_part,,60,
+ho-hn-05,hinglish,synthetic,Gorhe Budruk mein pipeline toot gayi hai,Gorhe Budruk,tap,broken_part,,,

@@ -1,0 +1,38 @@
+id,lang,source,transcript,village,source_type,fault,duration_days,households,drinking_source
+mr-01,mr,synthetic,"खेड शिवापूर मध्ये हातपंप पाच दिवस बंद आहे, साठ घरांना पाणी नाही",Khed Shivapur,handpump,no_water,5,60,
+mr-02,mr,synthetic,"डोणजे गावात नळाला गढूळ पाणी येते, हेच पिण्याचे पाणी आहे",Donje,tap,contamination,,,true
+mr-03,mr,synthetic,"कुडजे गावातील बोअरवेलची मोटर जळाली, वीज नाही, दोन दिवस झाले",Kudje,borewell,power,2,,
+mr-04,mr,synthetic,"कोंढणपूर मध्ये टाकी गळते आहे, तीस घरे",Kondhanpur,tank,leakage,,30,
+mr-05,mr,synthetic,सांगरूण गावात विहिरीचे पाणी पिवळे झाले आहे आणि वास येतो,Sangrun,well,contamination,,,
+mr-06,mr,synthetic,"खडकवासला येथे नळाला पाणी कमी दाबाने येते, चार दिवस झाले",Khadakwasla,tap,low_pressure,4,,
+mr-07,mr,synthetic,गोऱ्हे बुद्रुक मध्ये हातपंपाचे हँडल तुटले आहे,Gorhe Budruk,handpump,broken_part,,,
+mr-08,mr,synthetic,"मालखेड गावात टँकर तीन दिवसांपासून आला नाही, पन्नास घरे वाट पाहत आहेत",Malkhed,tanker,no_water,3,50,
+mr-09,mr,synthetic,"खानापूर मध्ये पाईपलाईन फुटली आहे, पाणी वाया जात आहे",Khanapur,tap,leakage,,,
+mr-10,mr,synthetic,"शिवापूर मध्ये बोअरवेल बंद आहे, शंभर घरांना फटका, तीन दिवस",Khed Shivapur,borewell,no_water,3,100,
+mr-11,mr,synthetic,"डोणजे मध्ये विहिरीचे पाणी दूषित आहे, मुलांना जुलाब झाले, आम्ही हेच पाणी पितो",Donje,well,contamination,,,true
+mr-12,mr,synthetic,कुडजे मध्ये हातपंप दोन आठवडे बंद आहे,Kudje,handpump,no_water,14,,
+hi-01,hi,synthetic,"सांगरूण गाँव में कुआँ सूख गया है, पाँच दिन से पानी नहीं, सौ घर परेशान हैं",Sangrun,well,no_water,5,100,
+hi-02,hi,synthetic,"खेड शिवापुर में हैंडपंप खराब है, तीन दिन हो गए",Khed Shivapur,handpump,broken_part,3,,
+hi-03,hi,synthetic,"डोणजे गाँव में नल से गंदा पानी आ रहा है, यही पीने का पानी है",Donje,tap,contamination,,,true
+hi-04,hi,synthetic,"कुडजे में टंकी लीक हो रही है, चालीस घर",Kudje,tank,leakage,,40,
+hi-05,hi,synthetic,"कोंढणपुर में बोरवेल की मोटर जल गई, बिजली की दिक्कत है, दो दिन से",Kondhanpur,borewell,power,2,,
+hi-06,hi,synthetic,"खडकवासला में पानी का दबाव कम है, नल धीरे चलता है",Khadakwasla,tap,low_pressure,,,
+hi-07,hi,synthetic,गोऱ्हे में टैंकर चार दिन से नहीं आया,Gorhe Budruk,tanker,no_water,4,,
+hi-08,hi,synthetic,"मालखेड गाँव का हैंडपंप बंद है, पचास घरों को पानी नहीं मिल रहा",Malkhed,handpump,no_water,,50,
+hi-09,hi,synthetic,खानापुर में कुएँ का पानी पीला और बदबूदार है,Khanapur,well,contamination,,,
+hi-10,hi,synthetic,"शिवापुर में नल का पाइप टूटा है, एक हफ्ते से पानी नहीं",Khed Shivapur,tap,broken_part,7,,
+hi-11,hi,synthetic,डोणजे में बोरवेल से पानी कम आ रहा है,Donje,borewell,low_pressure,,,
+hi-12,hi,synthetic,"सांगरूण में हैंडपंप का पानी गंदा है, बच्चों को दस्त हो रहे हैं, हम यही पानी पीते हैं",Sangrun,handpump,contamination,,,true
+hn-01,hinglish,synthetic,Donje gaon ka handpump kharab hai teen din se pani nahi aa raha,Donje,handpump,broken_part,3,,
+hn-02,hinglish,synthetic,Khanapur mein tanki se paani leak ho raha hai pachas ghar affected hain,Khanapur,tank,leakage,,50,
+hn-03,hinglish,synthetic,"Shivapur mein borewell band hai, do din se, sau ghar",Khed Shivapur,borewell,no_water,2,100,
+hn-04,hinglish,synthetic,"Kudje mein nal se ganda pani aa raha hai, hum yahi pani peete hain",Kudje,tap,contamination,,,true
+hn-05,hinglish,synthetic,"Kondhanpur ka well sukh gaya, paani nahi hai, char din",Kondhanpur,well,no_water,4,,
+hn-06,hinglish,synthetic,Khadakwasla mein pressure kam hai tap ka,Khadakwasla,tap,low_pressure,,,
+hn-07,hinglish,synthetic,"Gorhe mein motor jal gayi bijli nahi hai, tanki khali",Gorhe Budruk,tank,power,,,
+hn-08,hinglish,synthetic,Malkhed mein tanker nahi aaya teen din se,Malkhed,tanker,no_water,3,,
+hn-09,hinglish,synthetic,Sangrun ka handpump ka handle toot gaya,Sangrun,handpump,broken_part,,,
+hn-10,hinglish,synthetic,"Donje mein pipeline leak hai, paani waste ho raha hai, tees ghar",Donje,tap,leakage,,30,
+hn-11,hinglish,synthetic,Shivapur ka hand pump 5 din se band hai 40 ghar,Khed Shivapur,handpump,no_water,5,40,
+hn-12,hinglish,synthetic,Kudje mein borewell ka pani peela aur smell aa rahi hai,Kudje,borewell,contamination,,,
+mr-13,mr,synthetic,"डोणजे गावात नळाला 2 दिवसांपासून पाणी आलं नाही, 60 घरं",Donje,tap,no_water,2,60,

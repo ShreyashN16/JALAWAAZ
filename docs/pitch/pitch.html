@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Jal Awaaz: one-page pitch</title>
+<style>
+  @page { size: A4; margin: 0; }
+  :root {
+    --ink: #1D2B53; --ink-2: #3E4B6F; --muted: #56627A; --line: #CFD9E2; --wash: #EEF3F6;
+    --teal: #0A7E8C; --teal-ink: #065E68; --teal-wash: #DCEFF1;
+    --red: #C62D42; --red-ink: #9E1F33; --red-wash: #FBE6E9;
+    --haldi: #D99A06; --haldi-ink: #7F5A00; --haldi-wash: #FBF0D3;
+    --green: #2F8F5B; --green-ink: #22704A; --green-wash: #E0F1E7;
+    --sans: "Inter", "Segoe UI", "Nirmala UI", "FreeSans", sans-serif;
+    --deva: "Nirmala UI", "Noto Sans Devanagari", "FreeSans", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    width: 210mm; height: 297mm; overflow: hidden;
+    padding: 13mm 14mm 11mm; font-family: var(--sans); color: var(--ink);
+    font-size: 8.9pt; line-height: 1.42;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    display: flex; flex-direction: column;
+  }
+  .deva, :lang(mr), :lang(hi) { font-family: var(--deva); }
+  p { margin: 0 0 .5em; }
+  h2 { font-size: 10.2pt; font-weight: 700; margin: 0 0 .35em; letter-spacing: -0.005em; }
+  h2 + p, h2 + ul { margin-top: 0; }
+  ul { margin: 0 0 .5em; padding-left: 1.05em; }
+  li { margin: 0 0 .22em; }
+  li::marker { color: var(--teal); }
+  b, strong { font-weight: 650; }
+
+  /* Header */
+  header { display: grid; grid-template-columns: 1fr auto; gap: 6mm; align-items: end;
+           padding-bottom: 4.2mm; border-bottom: 1.4pt solid var(--ink); }
+  .name { display: flex; align-items: baseline; gap: 3.2mm; margin: 0; }
+  .name .en { font-size: 25pt; font-weight: 750; letter-spacing: -0.02em; line-height: 1; }
+  .name .deva { font-size: 19pt; font-weight: 400; color: var(--teal-ink); line-height: 1; }
+  .promise { font-size: 12.6pt; line-height: 1.3; font-weight: 550; margin: 3mm 0 1.6mm; max-width: 132mm; }
+  .sub { color: var(--ink-2); margin: 0; max-width: 140mm; }
+  .tag { text-align: right; font-size: 7.6pt; color: var(--muted); line-height: 1.45; white-space: nowrap; }
+  .tag b { color: var(--ink); font-weight: 650; }
+
+  /* The loop: the one bold element. Colours are the dashboard's ticket-state colours. */
+  .loop { margin: 5mm 0 4.6mm; }
+  .loop-title { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2.4mm; }
+  .loop-title h2 { margin: 0; }
+  .loop-title span { color: var(--muted); font-size: 7.6pt; }
+  .steps { display: grid; grid-template-columns: repeat(5, 1fr) 1.18fr; gap: 0; position: relative; }
+  .step { position: relative; padding: 0 2.6mm 0 0; }
+  .dot { width: 6.2mm; height: 6.2mm; border-radius: 50%; display: grid; place-items: center;
+         font-weight: 700; font-size: 8pt; color: #fff; background: var(--ink); position: relative; z-index: 1; }
+  .step::before { content: ""; position: absolute; left: 3.1mm; right: -0.2mm; top: 3.1mm; height: 1.2pt;
+                  background: var(--line); }
+  .step.last::before { display: none; }
+  .step h3 { font-size: 8.9pt; font-weight: 700; margin: 2mm 0 .6mm; line-height: 1.2; }
+  .step p { font-size: 7.7pt; color: var(--ink-2); margin: 0; line-height: 1.35; }
+  .s-new .dot { background: var(--red); }
+  .s-fix .dot { background: var(--haldi); color: var(--ink); }
+  .outcome { display: grid; gap: 1.6mm; align-content: start; }
+  .out { border-radius: 2mm; padding: 1.6mm 2.4mm; font-size: 7.8pt; line-height: 1.3; }
+  .out b { display: block; font-size: 8.6pt; }
+  .out.yes { background: var(--green-wash); color: var(--green-ink); border-left: 2.2pt solid var(--green); }
+  .out.no  { background: var(--red-wash); color: var(--red-ink); border-left: 2.2pt solid var(--red); }
+
+  /* Body */
+  main { display: grid; grid-template-columns: 1fr 1.08fr; gap: 7mm; flex: 1; }
+  section { margin-bottom: 3.6mm; }
+  .metric { background: var(--wash); border-radius: 2mm; padding: 2.6mm 3mm 2.2mm; margin-bottom: 3.6mm; }
+  .metric .formula { font-weight: 650; margin: .3em 0 .45em; }
+  .metric p:last-child { margin: 0; color: var(--ink-2); }
+
+  table { border-collapse: collapse; width: 100%; margin-bottom: .2em; }
+  td { vertical-align: top; padding: 1.5mm 0; border-top: .6pt solid var(--line); }
+  tr:last-child td { border-bottom: .6pt solid var(--line); }
+  td.model { width: 22mm; padding-right: 2.4mm; }
+  td.model b { display: block; font-size: 9pt; }
+  td.model span { color: var(--teal-ink); font-size: 7.6pt; font-weight: 600; }
+
+  .measured li b { font-size: 9.4pt; }
+  .not { color: var(--red-ink); font-weight: 600; }
+
+  footer { border-top: .6pt solid var(--line); padding-top: 2.4mm; color: var(--muted); font-size: 7.4pt;
+           display: grid; grid-template-columns: 1fr auto; gap: 6mm; }
+  footer p { margin: 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1 class="name"><span class="en">Jal Awaaz</span><span class="deva" lang="mr">जल आवाज</span></h1>
+    <p class="promise">A water complaint is closed only when the person who reported it says the water runs.</p>
+    <p class="sub">Voice-first fault reporting and fix verification for village water supply, in Marathi, Hindi
+      and Hinglish. Built on Gnani Prisma, Timbre and Evon.</p>
+  </div>
+  <div class="tag">
+    <b>Great Indian AI Internship Challenge</b><br>
+    Independent student prototype<br>
+    Not an official government service
+  </div>
+</header>
+
+<div class="loop">
+  <div class="loop-title">
+    <h2>How a complaint travels</h2>
+    <span>Dot colours are the ticket states on the district map</span>
+  </div>
+  <div class="steps">
+    <div class="step"><div class="dot">1</div>
+      <h3>Missed call</h3><p>Free for the caller, from any phone.</p></div>
+    <div class="step"><div class="dot">2</div>
+      <h3>AI callback</h3><p>Says it is an AI, then asks one question at a time.</p></div>
+    <div class="step s-new"><div class="dot">3</div>
+      <h3>Read-back, then <span class="deva" lang="mr">“हो”</span></h3><p>A ticket exists only after the caller confirms.</p></div>
+    <div class="step s-fix"><div class="dot">4</div>
+      <h3>Engineer reports a fix</h3><p>This never closes the ticket.</p></div>
+    <div class="step"><div class="dot">5</div>
+      <h3>Second call</h3><p>The original caller is asked: is the water running?</p></div>
+    <div class="step last outcome">
+      <div class="out yes"><b>Yes: verified</b>Closed by the caller.</div>
+      <div class="out no"><b>No: reopened</b>Priority rises one level.</div>
+    </div>
+  </div>
+</div>
+
+<main>
+  <div>
+    <section>
+      <h2>The problem</h2>
+      <p>When a handpump or tap complaint is marked fixed, usually nobody asks the person who reported it
+        whether the water came back. Many people who depend on a village source cannot easily use an app or
+        a web portal, but almost anyone can give a missed call and answer a question in their own language.</p>
+    </section>
+
+    <div class="metric">
+      <h2>The number it is built to measure</h2>
+      <p class="formula">False-closure rate = tickets reopened at least once ÷ tickets whose fix the caller
+        answered, always shown with its n.</p>
+      <p>It is the district dashboard’s headline figure. We claim no value for it yet: no pilot with real
+        callers has been run.</p>
+    </div>
+
+    <section>
+      <h2>Code decides; models only hear, extract and speak</h2>
+      <ul>
+        <li><b>Priority</b> comes from fixed rules, each with a stored reason: a contaminated drinking source,
+          100+ households without water for 2+ days, a repeat failure within 30 days, a reopened ticket.</li>
+        <li><b>SLAs</b> of 4, 24 and 72 hours by priority, with automatic escalation when one is missed.</li>
+        <li><b>A database trigger</b> rejects any illegal state change, so a claimed fix cannot become
+          “verified” without the caller.</li>
+        <li><b>Verification calls</b>: at most 3 attempts, never between 9 pm and 7 am.</li>
+      </ul>
+    </section>
+  </div>
+
+  <div>
+    <section>
+      <h2>Gnani models and what each one does</h2>
+      <table>
+        <tr><td class="model"><b>Prisma v3.0</b><span>hears</span></td>
+          <td>Speech to text. Each turn sends village names as key terms, the call’s topic, and the question
+            just asked as context, so short answers such as “40” or <span class="deva" lang="mr">“हो”</span>
+            are heard in context. A telephone mode tests 8 kHz phone-line audio.</td></tr>
+        <tr><td class="model"><b>Timbre v3.0</b><span>speaks</span></td>
+          <td>Text to speech, streamed so the voice starts on the first chunk. Numbers are spoken as words and
+            ticket numbers digit by digit; mu-law audio for phone lines.</td></tr>
+        <tr><td class="model"><b>Evon v3.3</b><span>extracts</span></td>
+          <td>Turns the transcript into fields (village, source, fault, days, households) on a self-hosted
+            server. A rule-based extractor takes over when it is not running.</td></tr>
+      </table>
+    </section>
+
+    <section class="measured">
+      <h2>Measured so far (13 November 2026)</h2>
+      <ul>
+        <li><b>318</b> automated tests, including a browser test of the full report → fix → verify and
+          reopen demo.</li>
+        <li><b>12 of 15</b> held-out test calls (text) had village, source and fault all right, using the
+          rule-based extractor.</li>
+        <li>Speech accuracy on recorded village audio: <span class="not">not measured yet.</span></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Privacy and safety</h2>
+      <p>AI disclosed in the first sentence of every call. Read-back before every ticket. No audio stored.
+        Phone and device ids kept only as salted hashes; transcripts deleted after 90 days. One fixed health
+        line and no diagnosis. The public dashboard view shows totals only.</p>
+    </section>
+
+    <section>
+      <h2>Next</h2>
+      <p>Native-speaker review of every sentence; a recorded speech benchmark including noisy 8 kHz audio;
+        a small consented pilot with its n reported; a telephony provider for real missed calls.</p>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <p>In the demo the phone calls are simulated in a browser; the speech, language and ticket pipeline is
+    real. SMS messages are logged, not sent. No complaint reaches any government system. Built with AI
+    assistance during development; the product itself calls only Gnani models.</p>
+  <p>Screens: /phone, /engineer,<br>/dashboard, /metrics</p>
+</footer>
+
+</body>
+</html>
